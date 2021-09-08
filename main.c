@@ -11,7 +11,7 @@
  
 
 /* function declaration */
-double calc (lua_State* L, const char **args);
+void calc (lua_State* L, const char **args);
 void error (lua_State *L, const char *fmt, ...);
 
 int main(int argc, const char* argv[]){
@@ -23,39 +23,42 @@ int main(int argc, const char* argv[]){
   luaL_dofile(L, "calc.lua");
   
   // printf("%d \n", strlen(*argv));
-  double valor = calc(L, argv);
-
-  printf("Valor de resultado %.2f \n", valor);
+  calc(L, argv);
 
   lua_close(L);
   return 0;
 }
 
 /* call a function `calculo' defined in Lua */
-double calc (lua_State* L, const char **args) {
-  double z;
-
+void calc (lua_State* L, const char **args) {
 
   /* push functions and arguments */
   lua_getglobal(L, args[1]);  /* function to be called */
 
   for (int i = 3; i < atoi(args[2]) + 3; i++){
+    // printf("%d \n", atoi(args[i]));
     lua_pushnumber(L, atoi(args[i]));   /* push 1st argument */
   }
   
+  int results = (atoi(args[2]) > 1) ? 2 : 1;
+
 
   /* do the call (2 arguments, 1 result) */
-  if (lua_pcall(L, atoi(args[2]), (1 || 2), 0) != 0)
-    error(L, "error running function `calculo': %s",
+  if (lua_pcall(L, atoi(args[2]), results, 0) != 0)
+    error(L, "error running function `calculo': %s \n",
               lua_tostring(L, -1));
 
   /* retrieve result */
   if (!lua_isnumber(L, -1))
-    error(L, "function `calculo' must return a number");
-  z = lua_tostring(L, -1);
-  lua_pop(L, 1);  /* pop returned value */
+    error(L, "function `calculo' must return a number \n");
 
-  return z;
+  // printf("%s \n", lua_tostring(L, -1));
+  
+  for (int i = 0; i < results; i++){
+    printf("Result %d: %.2f \n",i+1, lua_tonumber(L, -1));
+    lua_pop(L, 1);  /* pop returned value */
+  }
+  
 }
 
 

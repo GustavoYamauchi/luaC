@@ -8,9 +8,9 @@ WORKDIR /app
 ##### Criar e Rodar o container
 ### docker build -t lua_c .
 # Mac e Linux
-### docker run --rm -it -v $PWD:/app lua_c bash
+### docker run --rm -it -v ${PWD}:/app lua_c bash
 # Windows
 ### docker run --rm -it -v %cd%:/app lua_c bash
 
 ## compilar dentro do container
-### gcc -I/usr/include/lua5.4 -o hello 01-hello_world.c -llua5.4
+### gcc -I/usr/include/lua5.4 -o hello main.c -llua5.4
